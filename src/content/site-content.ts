@@ -2,7 +2,7 @@ import type { SiteContent } from '@/types/site'
 
 export const siteContent: SiteContent = {
   company: {
-    shortName: 'Marevlo Research',
+    shortName: 'Marevlo.com',
     entity: 'Private Limited',
     location: 'Bengaluru, India',
     status: 'Under Construction',
@@ -15,13 +15,13 @@ export const siteContent: SiteContent = {
     titleAccent: 'Infrastructure',
     titleTrail: "for India's AI Future",
     description:
-      "Marevlo Research is a deep-tech company building products across AI education, personal finance, and applied AI — while consulting the world's leading firms on what comes next.",
+      "Marevlo.com is a deep-tech company building products across AI education, personal finance, and applied AI — while consulting the world's leading firms on what comes next.",
   },
   ventures: [
     {
       icon: '\u{1F4D0}',
       title: 'Marevlo Education',
-      brand: 'marevlo.com · In Development',
+      brand: 'Marevlo.com · In Development',
       description:
         "India's premium learning platform for AI, Machine Learning & Data Science — production-grade courses, an adaptive AI tutor (MIRA), 481 curated DSA challenges, and interactive visual learning modules.",
       status: 'In Development',
@@ -39,7 +39,7 @@ export const siteContent: SiteContent = {
       title: 'AI Consulting',
       brand: 'Enterprise & Strategy Firms · Active',
       description:
-        'Deep AI consulting for global enterprises and strategy firms — Reinforcement Learning, Generative AI, Agentic AI architectures, predictive analytics, and ML pipeline engineering across energy, mining, telecom, and manufacturing.',
+        'Deep AI consulting for global enterprises and strategy firms, specializing in Reinforcement Learning, Generative AI, Agentic AI architectures, predictive analytics, and ML pipeline engineering across energy, mining, telecom, manufacturing, retail, banking, and e-commerce.',
       status: 'Active',
     },
     {

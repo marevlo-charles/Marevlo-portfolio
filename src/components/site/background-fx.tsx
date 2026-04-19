@@ -5,48 +5,37 @@ export function BackgroundFx() {
 
   useEffect(() => {
     const canvas = canvasRef.current
-
-    if (!canvas) {
-      return
-    }
+    if (!canvas) return
 
     const context = canvas.getContext('2d')
+    if (!context) return
 
-    if (!context) {
-      return
-    }
-
-    // Mouse tracking for repulsion effect
     const mouse = { x: -9999, y: -9999 }
-    const handleMouseMove = (e: MouseEvent) => {
-      mouse.x = e.clientX
-      mouse.y = e.clientY
-    }
-    const handleMouseLeave = () => {
-      mouse.x = -9999
-      mouse.y = -9999
-    }
-    
+    const handleMouseMove = (e: MouseEvent) => { mouse.x = e.clientX; mouse.y = e.clientY }
+    const handleMouseLeave = () => { mouse.x = -9999; mouse.y = -9999 }
     window.addEventListener('mousemove', handleMouseMove)
     window.addEventListener('mouseout', handleMouseLeave)
 
-    // Increased particle count slightly for better constellation networks
-    const particles = Array.from({ length: 45 }, () => ({
+    const particles = Array.from({ length: 25 }, () => ({
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
       vx: (Math.random() - 0.5) * 0.35,
       vy: (Math.random() - 0.5) * 0.35,
       baseRadius: Math.random() * 1.2 + 0.5,
       baseOpacity: Math.random() * 0.35 + 0.1,
-      phase: Math.random() * Math.PI * 2, // For pulsating desync
+      phase: Math.random() * Math.PI * 2,
     }))
 
     let frame = 0
+    let frameCount = 0
     let lastTime = performance.now()
+    let paused = false
+
+    const handleVisibility = () => { paused = document.hidden }
+    document.addEventListener('visibilitychange', handleVisibility)
 
     const resize = () => {
-      // Retina / HiDPI Fix
-      const dpr = window.devicePixelRatio || 1
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5)
       canvas.width = window.innerWidth * dpr
       canvas.height = window.innerHeight * dpr
       canvas.style.width = `${window.innerWidth}px`
@@ -55,72 +44,65 @@ export function BackgroundFx() {
     }
 
     const draw = (time: number) => {
-      // Delta-time based animation
-      const dt = Math.min((time - lastTime) / 16.666, 3) 
-      lastTime = time
+      frame = requestAnimationFrame(draw)
+      if (paused) return
 
-      // Use window bounds since scale was applied via dpr
+      const dt = Math.min((time - lastTime) / 16.666, 3)
+      lastTime = time
+      frameCount++
+
       context.clearRect(0, 0, window.innerWidth, window.innerHeight)
 
-      // 1. Update and Draw Particles
-      for (const particle of particles) {
-        // Mouse repulsion
-        const dx = particle.x - mouse.x
-        const dy = particle.y - mouse.y
+      for (const p of particles) {
+        const dx = p.x - mouse.x
+        const dy = p.y - mouse.y
         const distToMouse = Math.hypot(dx, dy)
-        
-        if (distToMouse < 150) {
+
+        if (distToMouse < 150 && distToMouse > 0) {
           const force = (150 - distToMouse) / 150
-          particle.x += (dx / distToMouse) * force * 2.5 * dt
-          particle.y += (dy / distToMouse) * force * 2.5 * dt
+          p.x += (dx / distToMouse) * force * 2.5 * dt
+          p.y += (dy / distToMouse) * force * 2.5 * dt
         }
 
-        // Apply idle velocity
-        particle.x += particle.vx * dt
-        particle.y += particle.vy * dt
+        p.x += p.vx * dt
+        p.y += p.vy * dt
 
-        // Wrap around boundaries with slight padding so they don't pop instantly
-        if (particle.x < -20) particle.x = window.innerWidth + 20
-        if (particle.x > window.innerWidth + 20) particle.x = -20
-        if (particle.y < -20) particle.y = window.innerHeight + 20
-        if (particle.y > window.innerHeight + 20) particle.y = -20
+        if (p.x < -20) p.x = window.innerWidth + 20
+        if (p.x > window.innerWidth + 20) p.x = -20
+        if (p.y < -20) p.y = window.innerHeight + 20
+        if (p.y > window.innerHeight + 20) p.y = -20
 
-        // Pulsating logic
-        const pulse = Math.sin(time * 0.002 + particle.phase) * 0.5 + 0.5
-        const currentRadius = particle.baseRadius * (0.8 + pulse * 0.4)
-        const currentOpacity = particle.baseOpacity * (0.6 + pulse * 0.4)
+        const pulse = Math.sin(time * 0.002 + p.phase) * 0.5 + 0.5
+        const r = p.baseRadius * (0.8 + pulse * 0.4)
+        const o = p.baseOpacity * (0.6 + pulse * 0.4)
 
         context.beginPath()
-        context.arc(particle.x, particle.y, currentRadius, 0, Math.PI * 2)
-        context.fillStyle = `rgba(45, 168, 224, ${currentOpacity})`
+        context.arc(p.x, p.y, r, 0, Math.PI * 2)
+        context.fillStyle = `rgba(45,168,224,${o})`
         context.fill()
       }
 
-      // 2. Draw Constellation Connectors
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x
-          const dy = particles[i].y - particles[j].y
-          const dist = Math.hypot(dx, dy)
-
-          if (dist < 140) {
-            const opacity = (1 - dist / 140) * 0.22 // Fade with distance
-            context.strokeStyle = `rgba(45, 168, 224, ${opacity})`
-            context.lineWidth = 0.6
-            context.beginPath()
-            context.moveTo(particles[i].x, particles[i].y)
-            context.lineTo(particles[j].x, particles[j].y)
-            context.stroke()
+      // Constellation lines — every 2nd frame, ONE batched stroke call
+      if (frameCount % 2 === 0) {
+        context.beginPath()
+        context.lineWidth = 0.6
+        context.strokeStyle = 'rgba(100,160,220,0.18)'
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x
+            const dy = particles[i].y - particles[j].y
+            if (dx * dx + dy * dy < 130 * 130) {
+              context.moveTo(particles[i].x, particles[i].y)
+              context.lineTo(particles[j].x, particles[j].y)
+            }
           }
         }
+        context.stroke()
       }
-
-      frame = requestAnimationFrame(draw)
     }
 
     resize()
     frame = requestAnimationFrame(draw)
-
     window.addEventListener('resize', resize)
 
     return () => {
@@ -128,6 +110,7 @@ export function BackgroundFx() {
       window.removeEventListener('resize', resize)
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('mouseout', handleMouseLeave)
+      document.removeEventListener('visibilitychange', handleVisibility)
     }
   }, [])
 

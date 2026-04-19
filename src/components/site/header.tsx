@@ -1,27 +1,27 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 import logo from '@/assets/marevlo-logo.png'
 import { siteContent } from '@/content/site-content'
 
 export function Header() {
-  const [isScrolled, setIsScrolled] = useState(false)
+  const headerRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
+    let scrolled = false
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
+      const shouldScrolled = window.scrollY > 50
+      if (shouldScrolled !== scrolled) {
+        scrolled = shouldScrolled
+        headerRef.current?.classList.toggle('scrolled', scrolled)
+      }
     }
-
     handleScroll()
     window.addEventListener('scroll', handleScroll, { passive: true })
-
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   return (
-    <header
-      id="site-header"
-      className={isScrolled ? 'scrolled' : undefined}
-    >
+    <header ref={headerRef} id="site-header">
       <div className="logo">
         <img src={logo} alt="Marevlo Research" />
         <div className="logo-wordmark">

@@ -5,52 +5,67 @@ export function HeroSection() {
   const { hero } = siteContent
   const titleRef = useRef<HTMLHeadingElement>(null)
   const arrowRef = useRef<HTMLButtonElement>(null)
+  const titleRectRef = useRef<DOMRect | null>(null)
+  const arrowRectRef = useRef<DOMRect | null>(null)
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e
+    const updateRects = () => {
+      titleRectRef.current = titleRef.current?.getBoundingClientRect() ?? null
+      arrowRectRef.current = arrowRef.current?.getBoundingClientRect() ?? null
+    }
 
-      // 1. Cinematic Flashlight for Title
-      if (titleRef.current) {
-        const titleRect = titleRef.current.getBoundingClientRect()
-        const centerX = titleRect.left + titleRect.width / 2
-        const centerY = titleRect.top + titleRect.height / 2
-        
-        const offsetX = (clientX - centerX) * 0.04
-        const offsetY = (clientY - centerY) * 0.04
-        
+    updateRects()
+    window.addEventListener('resize', updateRects, { passive: true })
+
+    let rafId = 0
+    let pendingX = 0
+    let pendingY = 0
+    let scheduled = false
+
+    const applyEffects = () => {
+      scheduled = false
+      const clientX = pendingX
+      const clientY = pendingY
+
+      if (titleRef.current && titleRectRef.current) {
+        const { left, width, top, height } = titleRectRef.current
+        const offsetX = (clientX - (left + width / 2)) * 0.04
+        const offsetY = (clientY - (top + height / 2)) * 0.04
         titleRef.current.style.textShadow = `
-          ${-offsetX}px ${-offsetY}px 20px rgba(45, 168, 224, 0.2),
-          ${-offsetX * 2}px ${-offsetY * 2}px 60px rgba(45, 168, 224, 0.1)
-        `
+          ${-offsetX}px ${-offsetY}px 20px rgba(45,168,224,0.2),
+          ${-offsetX * 2}px ${-offsetY * 2}px 60px rgba(45,168,224,0.1)`
       }
 
-      // 2. Magnetic Scroll Arrow
-      if (arrowRef.current) {
-        const arrowRect = arrowRef.current.getBoundingClientRect()
-        const arrowCenterX = arrowRect.left + arrowRect.width / 2
-        const arrowCenterY = arrowRect.top + arrowRect.height / 2
-        
-        const distX = clientX - arrowCenterX
-        const distY = clientY - arrowCenterY
+      if (arrowRef.current && arrowRectRef.current) {
+        const { left, width, top, height } = arrowRectRef.current
+        const distX = clientX - (left + width / 2)
+        const distY = clientY - (top + height / 2)
         const distance = Math.hypot(distX, distY)
-        
-        // If cursor gets within 160px, pull it magnetically
         if (distance < 160) {
-          const pullX = distX * 0.35
-          const pullY = distY * 0.35
-          arrowRef.current.style.setProperty('--mag-x', `${pullX}px`)
-          arrowRef.current.style.setProperty('--mag-y', `${pullY}px`)
+          arrowRef.current.style.setProperty('--mag-x', `${distX * 0.35}px`)
+          arrowRef.current.style.setProperty('--mag-y', `${distY * 0.35}px`)
         } else {
-          // Snap back to normal
-          arrowRef.current.style.setProperty('--mag-x', `0px`)
-          arrowRef.current.style.setProperty('--mag-y', `0px`)
+          arrowRef.current.style.setProperty('--mag-x', '0px')
+          arrowRef.current.style.setProperty('--mag-y', '0px')
         }
       }
     }
 
+    const handleMouseMove = (e: MouseEvent) => {
+      pendingX = e.clientX
+      pendingY = e.clientY
+      if (!scheduled) {
+        scheduled = true
+        rafId = requestAnimationFrame(applyEffects)
+      }
+    }
+
     window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('resize', updateRects)
+      cancelAnimationFrame(rafId)
+    }
   }, [])
 
   return (
@@ -80,4 +95,3 @@ export function HeroSection() {
     </section>
   )
 }
-

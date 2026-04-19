@@ -97,13 +97,14 @@ input {
 .ambient .orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(150px);
+  filter: blur(80px);
   opacity: 0;
+  will-change: transform;
 }
 
 .orb-1 {
-  width: 700px;
-  height: 700px;
+  width: 500px;
+  height: 500px;
   background: radial-gradient(circle, rgba(26, 124, 196, 0.07), transparent 70%);
   top: -18%;
   left: -12%;
@@ -113,8 +114,8 @@ input {
 }
 
 .orb-2 {
-  width: 550px;
-  height: 550px;
+  width: 380px;
+  height: 380px;
   background: radial-gradient(circle, rgba(78, 198, 232, 0.04), transparent 70%);
   bottom: -12%;
   right: -8%;
@@ -124,8 +125,8 @@ input {
 }
 
 .orb-3 {
-  width: 400px;
-  height: 400px;
+  width: 280px;
+  height: 280px;
   background: radial-gradient(circle, rgba(13, 79, 139, 0.05), transparent 70%);
   top: 45%;
   left: 55%;
@@ -244,8 +245,6 @@ header::after {
   right: 0;
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--blue-1), var(--blue-3), var(--blue-1), transparent);
-  background-size: 200% 100%;
-  animation: headerLine 6s linear infinite;
   opacity: 0.35;
   transition: opacity 0.4s;
 }
@@ -290,12 +289,17 @@ header.scrolled::before {
 .logo img {
   height: 42px;
   width: auto;
-  animation: pulseGlow 4s ease-in-out 2s infinite;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: drop-shadow(0 0 10px rgba(45, 168, 224, 0.2));
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s;
+}
+
+.logo:hover img {
+  filter: drop-shadow(0 0 20px rgba(45, 168, 224, 0.45));
 }
 
 .logo:hover img {
   transform: scale(1.08);
+  /* filter handled above */
 }
 
 @keyframes pulseGlow {
@@ -377,9 +381,7 @@ header.scrolled::before {
   padding: 0.32rem 0.85rem;
   background: rgba(45, 168, 224, 0.04);
   box-shadow: 0 0 12px rgba(45, 168, 224, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: border-color 0.3s, box-shadow 0.3s, background 0.3s, transform 0.3s;
   cursor: default;
 }
 
@@ -441,10 +443,8 @@ header.scrolled::before {
   border-radius: 40px;
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   cursor: default;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: color 0.4s, border-color 0.4s, box-shadow 0.4s, transform 0.4s, background 0.4s;
 }
 
 .hero .tag-pill:hover {
@@ -489,18 +489,18 @@ header.scrolled::before {
 }
 
 .hero h1 .grad {
-  background: 
+  background:
     linear-gradient(110deg, var(--blue-2), transparent 40%),
     linear-gradient(250deg, var(--blue-4), transparent 50%),
     linear-gradient(330deg, var(--violet), transparent 60%),
     linear-gradient(20deg, var(--emerald), transparent 50%),
     var(--blue-1);
   background-size: 300% 300%;
+  background-position: 30% 50%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-style: italic;
-  animation: liquidAurora 12s ease-in-out infinite alternate;
   filter: drop-shadow(0 0 16px rgba(45, 168, 224, 0.45));
 }
 
@@ -561,13 +561,11 @@ header.scrolled::before {
   from {
     opacity: 0;
     transform: translateY(14px);
-    filter: blur(4px);
   }
 
   to {
     opacity: 1;
     transform: translateY(0);
-    filter: blur(0);
   }
 }
 
@@ -614,9 +612,6 @@ header.scrolled::before {
     box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  will-change: transform;
   border-radius: var(--radius);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   cursor: pointer;
@@ -657,7 +652,7 @@ header.scrolled::before {
   color: var(--text-dim);
   opacity: 0;
   transform: translate(-12px, 12px);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.4s, transform 0.4s, color 0.3s;
   z-index: 2;
 }
 
@@ -899,10 +894,8 @@ header.scrolled::before {
   text-align: center;
   position: relative;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background 0.35s, box-shadow 0.35s, opacity 0.4s, transform 0.4s;
 }
 
 .facts:hover .fact:not(:hover) {
@@ -1004,7 +997,7 @@ header.scrolled::before {
   font-size: 0.78rem;
   color: var(--text-dim);
   pointer-events: none;
-  transition: all 0.22s;
+  transition: top 0.22s, font-size 0.22s, color 0.22s;
   font-family: 'Manrope', sans-serif;
   font-weight: 300;
 }
@@ -1186,7 +1179,7 @@ header.scrolled::before {
   width: 0;
   height: 2px;
   background: linear-gradient(90deg, var(--blue-3), var(--blue-4));
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s;
   transform: translateX(-50%);
   border-radius: 2px;
   box-shadow: 0 0 8px rgba(45, 168, 224, 0);
@@ -1227,8 +1220,8 @@ header.scrolled::before {
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s, background 0.35s;
+  box-shadow:
     0 2px 12px rgba(45, 168, 224, 0.25),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
@@ -1285,7 +1278,7 @@ header.scrolled::before {
   height: 2px;
   background: var(--text);
   border-radius: 2px;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background 0.4s, transform 0.4s;
   transform: translateY(-50%);
 }
 
@@ -1374,7 +1367,7 @@ header.scrolled::before {
   text-align: center;
   transform: translateY(20px) scale(0.95);
   opacity: 0;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s, opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
 }
 
 .mobile-menu.open .mobile-menu-content {
@@ -1400,7 +1393,7 @@ header.scrolled::before {
   color: var(--text);
   text-decoration: none;
   letter-spacing: 0.02em;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: color 0.35s, transform 0.35s;
   position: relative;
 }
 
@@ -1412,7 +1405,7 @@ header.scrolled::before {
   width: 0;
   height: 2px;
   background: linear-gradient(90deg, var(--blue-3), var(--blue-4));
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   transform: translateX(-50%);
   border-radius: 2px;
 }
@@ -1446,8 +1439,8 @@ header.scrolled::before {
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 
+  transition: transform 0.35s, box-shadow 0.35s, background 0.35s;
+  box-shadow:
     0 4px 20px rgba(45, 168, 224, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
@@ -1821,7 +1814,7 @@ html {
   color: var(--text-dim);
   cursor: pointer;
   margin-top: 3rem;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: border-color 0.35s, background 0.35s, color 0.35s, box-shadow 0.35s, transform 0.15s ease-out;
   opacity: 0;
   animation:
     up 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.3s forwards,
@@ -1848,7 +1841,7 @@ html {
   color: var(--text-dim);
   opacity: 0;
   transform: translate(-5px, 5px);
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.35s, transform 0.35s, color 0.3s;
 }
 
 .venture:hover .v-arrow {
@@ -1871,8 +1864,6 @@ html {
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.025);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
 }
 
 /* ── Enhanced Fact Cards ── */
@@ -1920,8 +1911,6 @@ html {
   border: 1px solid var(--border);
   border-radius: calc(var(--radius) * 2.5);
   background: rgba(10, 12, 16, 0.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   box-shadow:
     0 0 60px rgba(45, 168, 224, 0.03),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);

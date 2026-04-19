@@ -2,7 +2,7 @@ import type { SiteContent } from '@/types/site'
 
 export const siteContent: SiteContent = {
   company: {
-    shortName: 'Marevlo.com',
+    shortName: 'MAREVLO RESEARCH',
     entity: 'Private Limited',
     location: 'Bengaluru, India',
     status: 'Under Construction',
@@ -13,17 +13,17 @@ export const siteContent: SiteContent = {
     tag: 'Education · Finance · AI Consulting · Research',
     titleLead: 'Building the',
     titleAccent: 'Infrastructure',
-    titleTrail: "for India's AI Future",
+    titleTrail: "for a Universal AI Future",
     description:
-      "Marevlo.com is a deep-tech company building products across AI education, personal finance, and applied AI — while consulting the world's leading firms on what comes next.",
+      "Marevlo Research Pvt Ltd is a deep-tech company building products across AI education, personal finance, and applied AI while consulting the world's leading firms on what comes next.",
   },
   ventures: [
     {
       icon: '\u{1F4D0}',
       title: 'Marevlo Education',
-      brand: 'Marevlo.com · In Development',
+      brand: 'Marevlo Research Pvt Ltd · In Development',
       description:
-        "India's premium learning platform for AI, Machine Learning & Data Science — production-grade courses, an adaptive AI tutor (MIRA), 481 curated DSA challenges, and interactive visual learning modules.",
+        "India's premium learning platform for AI, Machine Learning & Data Science production-grade courses, an adaptive AI tutor (MIRA), 481 curated DSA challenges, and interactive visual learning modules.",
       status: 'In Development',
     },
     {
@@ -31,7 +31,7 @@ export const siteContent: SiteContent = {
       title: 'Artha',
       brand: 'Goal-First Financial Companion · Idea Phase',
       description:
-        "India's first goal-driven personal finance app — zero bank login, on-device SMS parsing, dream-based savings roadmaps, behavioral nudges, a splurge fund, and a future-self simulator that turns saving into living.",
+        "India's first goal-driven personal finance app zero bank login, on-device SMS parsing, dream-based savings roadmaps, behavioral nudges, a splurge fund, and a future-self simulator that turns saving into living.",
       status: 'Future Project',
     },
     {
@@ -47,7 +47,7 @@ export const siteContent: SiteContent = {
       title: 'Marevlo Research',
       brand: 'Advanced Programme · In Development',
       description:
-        'A research-grade education programme — advanced courses on PINNs, Reinforcement Learning, diffusion models, causal inference, and animated paper breakdowns published bi-weekly for practitioners pushing the frontier.',
+        'A research-grade education programme advanced courses on PINNs, Reinforcement Learning, diffusion models, causal inference, and animated paper breakdowns published bi-weekly for practitioners pushing the frontier.',
       status: 'In Development',
     },
   ],

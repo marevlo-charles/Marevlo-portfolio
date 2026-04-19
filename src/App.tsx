@@ -15,8 +15,8 @@ function App() {
       <ScrollProgress />
       <BackgroundFx />
       <div className="grain" aria-hidden="true" />
+      <Header />
       <div className="page">
-        <Header />
         <HeroSection />
         <VenturesSection />
         <MetricsSection />

@@ -1,12 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 export function Cursor() {
   const dotRef = useRef<HTMLDivElement>(null)
   const ringRef = useRef<HTMLDivElement>(null)
   const mouse = useRef({ x: -200, y: -200 })
   const ring = useRef({ x: -200, y: -200 })
-  const [hovered, setHovered] = useState(false)
-  const [visible, setVisible] = useState(false)
+  const visibleRef = useRef(false)
 
   useEffect(() => {
     if (!window.matchMedia('(pointer: fine)').matches) return
@@ -15,18 +14,24 @@ export function Cursor() {
 
     const onMove = (e: MouseEvent) => {
       mouse.current = { x: e.clientX, y: e.clientY }
-      if (!visible) setVisible(true)
+      if (!visibleRef.current) {
+        visibleRef.current = true
+        dotRef.current?.classList.remove('cursor-hidden')
+        ringRef.current?.classList.remove('cursor-hidden')
+      }
     }
 
     const onOver = (e: MouseEvent) => {
       if ((e.target as Element).closest('a, button, [role="button"], input')) {
-        setHovered(true)
+        dotRef.current?.classList.add('cursor-hovered')
+        ringRef.current?.classList.add('cursor-hovered')
       }
     }
 
     const onOut = (e: MouseEvent) => {
       if ((e.target as Element).closest('a, button, [role="button"], input')) {
-        setHovered(false)
+        dotRef.current?.classList.remove('cursor-hovered')
+        ringRef.current?.classList.remove('cursor-hovered')
       }
     }
 
@@ -55,18 +60,12 @@ export function Cursor() {
       document.removeEventListener('mouseout', onOut)
       cancelAnimationFrame(animId)
     }
-  }, [visible])
+  }, [])
 
   return (
     <>
-      <div
-        ref={dotRef}
-        className={`cursor-dot${hovered ? ' cursor-hovered' : ''}${visible ? '' : ' cursor-hidden'}`}
-      />
-      <div
-        ref={ringRef}
-        className={`cursor-ring${hovered ? ' cursor-hovered' : ''}${visible ? '' : ' cursor-hidden'}`}
-      />
+      <div ref={dotRef} className="cursor-dot cursor-hidden" />
+      <div ref={ringRef} className="cursor-ring cursor-hidden" />
     </>
   )
 }

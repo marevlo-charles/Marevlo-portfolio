@@ -13,7 +13,7 @@ export const siteContent: SiteContent = {
     tag: 'Education · Finance · AI Consulting · Research',
     titleLead: 'Building the',
     titleAccent: 'Infrastructure',
-    titleTrail: "for a Universal AI Future",
+    titleTrail: "for the Modern AI Era",
     description:
       "Marevlo Research Pvt Ltd is a deep-tech company building products across AI education, personal finance, and applied AI while consulting the world's leading firms on what comes next.",
   },
@@ -21,7 +21,7 @@ export const siteContent: SiteContent = {
     {
       icon: '\u{1F4D0}',
       title: 'Marevlo Education',
-      brand: 'Marevlo Research Pvt Ltd · In Development',
+      brand: 'Marevlo.com · In Development',
       description:
         "India's premium learning platform for AI, Machine Learning & Data Science production-grade courses, an adaptive AI tutor (MIRA), 481 curated DSA challenges, and interactive visual learning modules.",
       status: 'In Development',
@@ -45,7 +45,7 @@ export const siteContent: SiteContent = {
     {
       icon: '\u{1F52C}',
       title: 'Marevlo Research',
-      brand: 'Advanced Programme · In Development',
+      brand: 'Marevlo.com · In Development',
       description:
         'A research-grade education programme advanced courses on PINNs, Reinforcement Learning, diffusion models, causal inference, and animated paper breakdowns published bi-weekly for practitioners pushing the frontier.',
       status: 'In Development',
